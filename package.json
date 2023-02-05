@@ -1,0 +1,29 @@
+{
+  "name": "biblethumb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "prisma migrate dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vahushty/biblethumb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vahushty/biblethumb/issues"
+  },
+  "homepage": "https://github.com/vahushty/biblethumb#readme",
+  "dependencies": {
+    "@prisma/client": "^4.9.0",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "prisma": "^4.9.0"
+  }
+}
