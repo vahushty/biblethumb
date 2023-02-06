@@ -11,6 +11,13 @@ datasource db {
 }
 
 model stihi {
-  id    Int    @unique
+  id    Int    @id @default(autoincrement())
+  chapter Int
+  number Int
   stih String 
+}
+
+model baseInit {
+  id Int  @id @default(autoincrement())
+  token String @unique
 }

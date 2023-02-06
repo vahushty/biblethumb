@@ -1,8 +1,8 @@
 import { prisma } from "./prismaInit.js";
-export async function findStih(id) {
-  let find = await prisma.stihi.findUnique({
-    where: { id: id },
-    select: { stih: true, id: true },
+export async function findStih(chapter, number) {
+  let stih = await prisma.stihi.findFirst({
+    where: { chapter: chapter, number: number },
+    select: { stih: true },
   });
-  return find;
+  return stih;
 }
