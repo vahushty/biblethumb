@@ -9,8 +9,8 @@ if(initToken === null){
   const body = {
     name: "product",
     email: "sobakingavgavgav1488@email.com",
-    password: "666666", // minimum size 6 digits
-    notifications: false, // receive update emails from www.abibliadigital.com.br
+    password: "666666", 
+    notifications: false, 
   };
 
   const response = await fetch("https://www.abibliadigital.com.br/api/users", {
