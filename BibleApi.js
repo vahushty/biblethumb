@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import { prisma } from "./prismaInit.js";
 export class BibleApi {
   #AUTH_DATA = {
     name: "product",
@@ -8,8 +9,7 @@ export class BibleApi {
   };
 
   #BASE_URL = `https://www.abibliadigital.com.br/api/`;
-  constructor(token, initCb) {
-    this.initCb = initCb;
+  constructor(token) {
     this.token = token;
   }
 
@@ -37,6 +37,7 @@ export class BibleApi {
       },
     });
   }
+  async initBible() {}
 
   async getStih(chapter, number) {
     return await this.#authRequest(`verses/bbe/gn/${chapter}/${number}`);
@@ -51,8 +52,25 @@ export class BibleApi {
       throw new Error("Getting Token error" + response.msg);
     }
     this.token = response.token;
-    if (this.initCb) {
-      await this.initCb(response.token);
+    await this.initBible();
+  }
+}
+
+export class BibleInit extends BibleApi {
+  constructor(token) {
+    if (typeof BibleInit.instance === `object`) {
+      return BibleInit.instance;
     }
+    super(token);
+    BibleInit.instance = this;
+    return this;
+  }
+  async initBible() {
+    await prisma.baseInit.create({
+      data: {
+        id: 1,
+        token: this.token,
+      },
+    });
   }
 }
