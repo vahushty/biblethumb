@@ -1,31 +1,36 @@
 import express from "express";
 import { findServerStih } from "./findServerStih.js";
 import { addStih } from "./addStih.js";
-import { init } from "./Init.js";
-
 
 const host = "localhost";
 const port = 8080;
 
 const app = express();
 
-const initToken = await init();
+//Server initialization
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Adding stih
 app.post("/api/stih/add", async (req, res) => {
   const chapter = req.body.chapter;
   const number = req.body.number;
-  const message = await addStih(chapter,number,initToken);
+  const message = await addStih(chapter, number);
   res.send(message);
 });
 
+//Finding stih
 app.post("/api/stih/get", async (req, res) => {
   const chapter = req.body.chapter;
   const number = req.body.number;
-  let stih = await findServerStih(chapter,number,initToken);
-  res.send(stih);
+  // try {
+  //   throw new Error(`a`);
+    let stih = await findServerStih(chapter, number);
+    res.send(stih);
+  // } catch (e) {
+  //   res.send(e.message);
+  // }
 });
 
 app.listen(port, host);

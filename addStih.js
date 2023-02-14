@@ -1,22 +1,12 @@
-import fetch from "node-fetch";
 import { prisma } from "./prismaInit.js";
 import { findStih } from "./findStih.js";
+import { bibleApi } from "./Init.js";
 
-export async function addStih(chapter, number, initToken) {
+export async function addStih(chapter, number) {
   let stih = await findStih(chapter, number);
   let message = ``;
   if (stih === null) {
-    const response = await fetch(
-      `https://www.abibliadigital.com.br/api/verses/bbe/gn/${chapter}/${number}`,
-      {
-        headers: {
-          Authorization: `Bearer ${initToken}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
+    let data = await bibleApi.getStih(chapter, number);
     if (data.msg !== undefined) {
       message = `Stih not founded`;
     } else {
