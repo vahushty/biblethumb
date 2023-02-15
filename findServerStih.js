@@ -1,5 +1,6 @@
 import { findStih } from "./findStih.js";
 import { bibleApi } from "./Init.js";
+
 export async function findServerStih(chapter, number) {
   let stih = await findStih(chapter, number);
   if (stih) {
@@ -12,6 +13,5 @@ export async function findServerStih(chapter, number) {
   } else {
     stih = data.msg;
   }
-
   return stih;
 }

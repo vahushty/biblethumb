@@ -24,13 +24,8 @@ app.post("/api/stih/add", async (req, res) => {
 app.post("/api/stih/get", async (req, res) => {
   const chapter = req.body.chapter;
   const number = req.body.number;
-  // try {
-  //   throw new Error(`a`);
-    let stih = await findServerStih(chapter, number);
-    res.send(stih);
-  // } catch (e) {
-  //   res.send(e.message);
-  // }
+  let stih = await findServerStih(chapter, number);
+  res.send(stih);
 });
 
 app.listen(port, host);

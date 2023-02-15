@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { prisma } from "./prismaInit.js";
+
 export class BibleApi {
   #AUTH_DATA = {
     name: "product",
@@ -9,9 +9,8 @@ export class BibleApi {
   };
 
   #BASE_URL = `https://www.abibliadigital.com.br/api/`;
-  constructor(token) {
-    this.token = token;
-  }
+
+  constructor() {}
 
   async #request(url, options = {}) {
     const response = await fetch(`${this.#BASE_URL}${url}`, {
@@ -26,9 +25,7 @@ export class BibleApi {
   }
 
   async #authRequest(url, options = {}) {
-    if (!this.token) {
-      await this.#initToken();
-    }
+    this.token = await this.#initToken();
     return await this.#request(url, {
       ...options,
       headers: {
@@ -37,40 +34,29 @@ export class BibleApi {
       },
     });
   }
+
   async initBible() {}
+
+  async tokenBible() {}
 
   async getStih(chapter, number) {
     return await this.#authRequest(`verses/bbe/gn/${chapter}/${number}`);
   }
 
   async #initToken() {
-    const response = await this.#request(`users`, {
-      method: "post",
-      body: JSON.stringify(this.#AUTH_DATA),
-    });
-    if (!response.token) {
-      throw new Error("Getting Token error" + response.msg);
+    let initToken = await this.tokenBible();
+    this.token = initToken?.token;
+    if (initToken === null) {
+      const response = await this.#request(`users`, {
+        method: "post",
+        body: JSON.stringify(this.#AUTH_DATA),
+      });
+      if (!response.token) {
+        throw new Error("Getting Token error" + response.msg);
+      }
+      this.token = response.token;
+      await this.initBible();
     }
-    this.token = response.token;
-    await this.initBible();
-  }
-}
-
-export class BibleInit extends BibleApi {
-  constructor(token) {
-    if (typeof BibleInit.instance === `object`) {
-      return BibleInit.instance;
-    }
-    super(token);
-    BibleInit.instance = this;
-    return this;
-  }
-  async initBible() {
-    await prisma.baseInit.create({
-      data: {
-        id: 1,
-        token: this.token,
-      },
-    });
+    return this.token;
   }
 }
