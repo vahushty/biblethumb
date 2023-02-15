@@ -25,6 +25,6 @@ export class BibleInit extends BibleApi {
       where: { id: 1 },
       select: { token: true },
     });
-    return initToken;
+    return initToken?.token || null;
   }
 }

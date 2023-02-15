@@ -44,9 +44,8 @@ export class BibleApi {
   }
 
   async #initToken() {
-    let initToken = await this.tokenBible();
-    this.token = initToken?.token;
-    if (initToken === null) {
+    this.token = await this.tokenBible();
+    if (this.token === null) {
       const response = await this.#request(`users`, {
         method: "post",
         body: JSON.stringify(this.#AUTH_DATA),
