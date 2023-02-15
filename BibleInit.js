@@ -2,8 +2,8 @@ import { BibleApi } from "./BibleApi.js";
 import { prisma } from "./prismaInit.js";
 
 export class BibleInit extends BibleApi {
-  constructor(...args) {
-    super(...args);
+  constructor() {
+    super();
     if (typeof BibleInit.instance === `object`) {
       return BibleInit.instance;
     }
