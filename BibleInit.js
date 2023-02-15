@@ -11,16 +11,16 @@ export class BibleInit extends BibleApi {
     return this;
   }
 
-  async initBible() {
+  async saveToken(token) {
     await prisma.baseInit.create({
       data: {
         id: 1,
-        token: this.token,
+        token: token,
       },
     });
   }
 
-  async tokenBible() {
+  async getPreInitializedToken() {
     let initToken = await prisma.baseInit.findFirst({
       where: { id: 1 },
       select: { token: true },

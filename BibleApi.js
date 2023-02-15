@@ -10,7 +10,7 @@ export class BibleApi {
 
   #BASE_URL = `https://www.abibliadigital.com.br/api/`;
 
-  constructor() {}
+  #token = null;
 
   async #request(url, options = {}) {
     const response = await fetch(`${this.#BASE_URL}${url}`, {
@@ -25,37 +25,42 @@ export class BibleApi {
   }
 
   async #authRequest(url, options = {}) {
-    this.token = await this.#initToken();
+    this.#token = await this.#initToken();
     return await this.#request(url, {
       ...options,
       headers: {
         ...options.headers,
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${this.#token}`,
       },
     });
   }
 
-  async initBible() {}
+  async saveToken() {}
 
-  async tokenBible() {}
+  async getPreInitializedToken() {
+    return null;
+  }
 
   async getStih(chapter, number) {
     return await this.#authRequest(`verses/bbe/gn/${chapter}/${number}`);
   }
 
   async #initToken() {
-    this.token = await this.tokenBible();
-    if (this.token === null) {
-      const response = await this.#request(`users`, {
-        method: "post",
-        body: JSON.stringify(this.#AUTH_DATA),
-      });
-      if (!response.token) {
-        throw new Error("Getting Token error" + response.msg);
-      }
-      this.token = response.token;
-      await this.initBible();
+    this.#token = await this.getPreInitializedToken();
+    if (this.#token !== null) {
+      return this.#token;
     }
-    return this.token;
+
+    const response = await this.#request(`users`, {
+      method: "post",
+      body: JSON.stringify(this.#AUTH_DATA),
+    });
+    if (!response.token) {
+      throw new Error("Getting Token error" + response.msg);
+    }
+    this.#token = response.token;
+    await this.saveToken(this.#token);
+  
+    return this.#token;
   }
 }
